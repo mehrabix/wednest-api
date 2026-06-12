@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WedNest.Application.DTOs;
+using WedNest.Application.Interfaces;
 using WedNest.Application.Services;
 
 namespace WedNest.API.Controllers;
@@ -10,8 +12,13 @@ namespace WedNest.API.Controllers;
 public class WeddingsController : ControllerBase
 {
     private readonly WeddingService _service;
+    private readonly IAuthService _authService;
 
-    public WeddingsController(WeddingService service) => _service = service;
+    public WeddingsController(WeddingService service, IAuthService authService)
+    {
+        _service = service;
+        _authService = authService;
+    }
 
     [AllowAnonymous]
     [HttpGet]
@@ -37,6 +44,9 @@ public class WeddingsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateWeddingRequest request)
     {
+        var user = await _authService.GetOrCreateUserFromClaimsAsync(User);
+        if (user == null) return Unauthorized();
+        request.Partner1Id = user.Id;
         var result = await _service.CreateAsync(request);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }

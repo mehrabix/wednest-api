@@ -43,7 +43,7 @@ public class WeddingService
             Slug = request.Slug,
             IsPublic = request.IsPublic,
             Partner1Id = request.Partner1Id,
-            Partner2Id = request.Partner2Id,
+            Partner2Id = request.Partner2Id != Guid.Empty ? request.Partner2Id : null,
             Status = WeddingStatus.Draft,
             CreatedAt = DateTime.UtcNow
         };

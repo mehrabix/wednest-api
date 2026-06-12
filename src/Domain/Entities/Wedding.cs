@@ -20,10 +20,10 @@ public class Wedding : BaseEntity
     public bool IsPublic { get; set; } = true;
 
     public Guid Partner1Id { get; set; }
-    public Guid Partner2Id { get; set; }
+    public Guid? Partner2Id { get; set; }
 
     public User Partner1 { get; set; } = null!;
-    public User Partner2 { get; set; } = null!;
+    public User? Partner2 { get; set; }
 
     public ICollection<GiftItem> GiftItems { get; set; } = new List<GiftItem>();
     public ICollection<CashFund> CashFunds { get; set; } = new List<CashFund>();
