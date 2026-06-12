@@ -18,8 +18,13 @@ public class LanguageService
             .OrderBy(l => l.DisplayOrder)
             .Select(l => new LanguageDto
             {
-                Id = l.Id, Code = l.Code, Name = l.Name, NativeName = l.NativeName,
-                IsActive = l.IsActive, IsDefault = l.IsDefault, DisplayOrder = l.DisplayOrder
+                Id = l.Id,
+                Code = l.Code,
+                Name = l.Name,
+                NativeName = l.NativeName,
+                IsActive = l.IsActive,
+                IsDefault = l.IsDefault,
+                DisplayOrder = l.DisplayOrder
             })
             .ToListAsync();
     }
@@ -30,8 +35,13 @@ public class LanguageService
         if (lang == null) return null;
         return new LanguageDto
         {
-            Id = lang.Id, Code = lang.Code, Name = lang.Name, NativeName = lang.NativeName,
-            IsActive = lang.IsActive, IsDefault = lang.IsDefault, DisplayOrder = lang.DisplayOrder
+            Id = lang.Id,
+            Code = lang.Code,
+            Name = lang.Name,
+            NativeName = lang.NativeName,
+            IsActive = lang.IsActive,
+            IsDefault = lang.IsDefault,
+            DisplayOrder = lang.DisplayOrder
         };
     }
 
@@ -53,8 +63,13 @@ public class LanguageService
         await _context.SaveChangesAsync();
         return new LanguageDto
         {
-            Id = lang.Id, Code = lang.Code, Name = lang.Name, NativeName = lang.NativeName,
-            IsActive = lang.IsActive, IsDefault = lang.IsDefault, DisplayOrder = lang.DisplayOrder
+            Id = lang.Id,
+            Code = lang.Code,
+            Name = lang.Name,
+            NativeName = lang.NativeName,
+            IsActive = lang.IsActive,
+            IsDefault = lang.IsDefault,
+            DisplayOrder = lang.DisplayOrder
         };
     }
 
@@ -81,9 +96,13 @@ public class TranslationService
             .Where(t => t.WeddingId == weddingId)
             .Select(t => new WeddingTranslationDto
             {
-                Id = t.Id, WeddingId = t.WeddingId, LanguageId = t.LanguageId,
-                LanguageCode = t.Language.Code, Title = t.Title,
-                Description = t.Description, Venue = t.Venue
+                Id = t.Id,
+                WeddingId = t.WeddingId,
+                LanguageId = t.LanguageId,
+                LanguageCode = t.Language.Code,
+                Title = t.Title,
+                Description = t.Description,
+                Venue = t.Venue
             })
             .ToListAsync();
     }
@@ -95,9 +114,13 @@ public class TranslationService
         if (t == null) return null;
         return new WeddingTranslationDto
         {
-            Id = t.Id, WeddingId = t.WeddingId, LanguageId = t.LanguageId,
-            LanguageCode = t.Language.Code, Title = t.Title,
-            Description = t.Description, Venue = t.Venue
+            Id = t.Id,
+            WeddingId = t.WeddingId,
+            LanguageId = t.LanguageId,
+            LanguageCode = t.Language.Code,
+            Title = t.Title,
+            Description = t.Description,
+            Venue = t.Venue
         };
     }
 
@@ -132,9 +155,13 @@ public class TranslationService
         var langCode = await _context.Languages.Where(l => l.Id == request.LanguageId).Select(l => l.Code).FirstOrDefaultAsync();
         return new WeddingTranslationDto
         {
-            Id = existing.Id, WeddingId = existing.WeddingId, LanguageId = existing.LanguageId,
-            LanguageCode = langCode ?? "", Title = existing.Title,
-            Description = existing.Description, Venue = existing.Venue
+            Id = existing.Id,
+            WeddingId = existing.WeddingId,
+            LanguageId = existing.LanguageId,
+            LanguageCode = langCode ?? "",
+            Title = existing.Title,
+            Description = existing.Description,
+            Venue = existing.Venue
         };
     }
 
@@ -145,8 +172,12 @@ public class TranslationService
             .Where(t => t.GiftItemId == giftItemId)
             .Select(t => new GiftItemTranslationDto
             {
-                Id = t.Id, GiftItemId = t.GiftItemId, LanguageId = t.LanguageId,
-                LanguageCode = t.Language.Code, Name = t.Name, Description = t.Description
+                Id = t.Id,
+                GiftItemId = t.GiftItemId,
+                LanguageId = t.LanguageId,
+                LanguageCode = t.Language.Code,
+                Name = t.Name,
+                Description = t.Description
             })
             .ToListAsync();
     }
@@ -166,8 +197,12 @@ public class TranslationService
         {
             existing = new GiftItemTranslation
             {
-                Id = Guid.NewGuid(), GiftItemId = giftItemId, LanguageId = languageId,
-                Name = name, Description = description, CreatedAt = DateTime.UtcNow
+                Id = Guid.NewGuid(),
+                GiftItemId = giftItemId,
+                LanguageId = languageId,
+                Name = name,
+                Description = description,
+                CreatedAt = DateTime.UtcNow
             };
             _context.GiftItemTranslations.Add(existing);
         }
@@ -176,8 +211,12 @@ public class TranslationService
         var langCode = await _context.Languages.Where(l => l.Id == languageId).Select(l => l.Code).FirstOrDefaultAsync();
         return new GiftItemTranslationDto
         {
-            Id = existing.Id, GiftItemId = existing.GiftItemId, LanguageId = existing.LanguageId,
-            LanguageCode = langCode ?? "", Name = existing.Name, Description = existing.Description
+            Id = existing.Id,
+            GiftItemId = existing.GiftItemId,
+            LanguageId = existing.LanguageId,
+            LanguageCode = langCode ?? "",
+            Name = existing.Name,
+            Description = existing.Description
         };
     }
 
@@ -188,8 +227,12 @@ public class TranslationService
             .Where(t => t.CashFundId == cashFundId)
             .Select(t => new CashFundTranslationDto
             {
-                Id = t.Id, CashFundId = t.CashFundId, LanguageId = t.LanguageId,
-                LanguageCode = t.Language.Code, Name = t.Name, Description = t.Description
+                Id = t.Id,
+                CashFundId = t.CashFundId,
+                LanguageId = t.LanguageId,
+                LanguageCode = t.Language.Code,
+                Name = t.Name,
+                Description = t.Description
             })
             .ToListAsync();
     }
@@ -209,8 +252,12 @@ public class TranslationService
         {
             existing = new CashFundTranslation
             {
-                Id = Guid.NewGuid(), CashFundId = cashFundId, LanguageId = languageId,
-                Name = name, Description = description, CreatedAt = DateTime.UtcNow
+                Id = Guid.NewGuid(),
+                CashFundId = cashFundId,
+                LanguageId = languageId,
+                Name = name,
+                Description = description,
+                CreatedAt = DateTime.UtcNow
             };
             _context.CashFundTranslations.Add(existing);
         }
@@ -219,8 +266,12 @@ public class TranslationService
         var langCode = await _context.Languages.Where(l => l.Id == languageId).Select(l => l.Code).FirstOrDefaultAsync();
         return new CashFundTranslationDto
         {
-            Id = existing.Id, CashFundId = existing.CashFundId, LanguageId = existing.LanguageId,
-            LanguageCode = langCode ?? "", Name = existing.Name, Description = existing.Description
+            Id = existing.Id,
+            CashFundId = existing.CashFundId,
+            LanguageId = existing.LanguageId,
+            LanguageCode = langCode ?? "",
+            Name = existing.Name,
+            Description = existing.Description
         };
     }
 }
@@ -265,9 +316,14 @@ public class PublicService
             .OrderBy(g => g.DisplayOrder)
             .Select(g => new PublicGiftItemDto
             {
-                Id = g.Id, Name = g.Name, Description = g.Description,
-                Price = g.Price, ImageUrl = g.ImageUrl, StoreUrl = g.StoreUrl,
-                Status = g.Status.ToString(), Quantity = g.Quantity,
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description,
+                Price = g.Price,
+                ImageUrl = g.ImageUrl,
+                StoreUrl = g.StoreUrl,
+                Status = g.Status.ToString(),
+                Quantity = g.Quantity,
                 QuantityPurchased = g.QuantityPurchased
             })
             .ToListAsync();
@@ -277,18 +333,27 @@ public class PublicService
             .OrderBy(c => c.DisplayOrder)
             .Select(c => new PublicCashFundDto
             {
-                Id = c.Id, Name = c.Name, Description = c.Description,
-                TargetAmount = c.TargetAmount, CurrentAmount = c.CurrentAmount,
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                TargetAmount = c.TargetAmount,
+                CurrentAmount = c.CurrentAmount,
                 ImageUrl = c.ImageUrl
             })
             .ToListAsync();
 
         return new PublicWeddingDto
         {
-            Id = wedding.Id, Title = title, WeddingDate = wedding.WeddingDate,
-            Venue = venue, Description = description, CoverImageUrl = wedding.CoverImageUrl,
-            Slug = wedding.Slug, Language = language,
-            GiftItems = giftItems, CashFunds = cashFunds
+            Id = wedding.Id,
+            Title = title,
+            WeddingDate = wedding.WeddingDate,
+            Venue = venue,
+            Description = description,
+            CoverImageUrl = wedding.CoverImageUrl,
+            Slug = wedding.Slug,
+            Language = language,
+            GiftItems = giftItems,
+            CashFunds = cashFunds
         };
     }
 }
@@ -305,8 +370,12 @@ public class UserService
         if (user == null) return null;
         return new UserDto
         {
-            Id = user.Id, Email = user.Email, FirstName = user.FirstName,
-            LastName = user.LastName, PhoneNumber = user.PhoneNumber, Role = (int)user.Role
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Role = (int)user.Role
         };
     }
 
@@ -324,8 +393,12 @@ public class UserService
 
         return new UserDto
         {
-            Id = user.Id, Email = user.Email, FirstName = user.FirstName,
-            LastName = user.LastName, PhoneNumber = user.PhoneNumber, Role = (int)user.Role
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            PhoneNumber = user.PhoneNumber,
+            Role = (int)user.Role
         };
     }
 }

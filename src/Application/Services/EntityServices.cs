@@ -18,10 +18,16 @@ public class GiftItemService
             .OrderBy(g => g.DisplayOrder)
             .Select(g => new GiftItemDto
             {
-                Id = g.Id, Name = g.Name, Description = g.Description,
-                Price = g.Price, ImageUrl = g.ImageUrl, StoreUrl = g.StoreUrl,
-                Status = g.Status.ToString(), Quantity = g.Quantity,
-                QuantityPurchased = g.QuantityPurchased, DisplayOrder = g.DisplayOrder,
+                Id = g.Id,
+                Name = g.Name,
+                Description = g.Description,
+                Price = g.Price,
+                ImageUrl = g.ImageUrl,
+                StoreUrl = g.StoreUrl,
+                Status = g.Status.ToString(),
+                Quantity = g.Quantity,
+                QuantityPurchased = g.QuantityPurchased,
+                DisplayOrder = g.DisplayOrder,
                 WeddingId = g.WeddingId
             })
             .ToListAsync();
@@ -33,10 +39,16 @@ public class GiftItemService
         if (item == null) return null;
         return new GiftItemDto
         {
-            Id = item.Id, Name = item.Name, Description = item.Description,
-            Price = item.Price, ImageUrl = item.ImageUrl, StoreUrl = item.StoreUrl,
-            Status = item.Status.ToString(), Quantity = item.Quantity,
-            QuantityPurchased = item.QuantityPurchased, DisplayOrder = item.DisplayOrder,
+            Id = item.Id,
+            Name = item.Name,
+            Description = item.Description,
+            Price = item.Price,
+            ImageUrl = item.ImageUrl,
+            StoreUrl = item.StoreUrl,
+            Status = item.Status.ToString(),
+            Quantity = item.Quantity,
+            QuantityPurchased = item.QuantityPurchased,
+            DisplayOrder = item.DisplayOrder,
             WeddingId = item.WeddingId
         };
     }
@@ -62,10 +74,16 @@ public class GiftItemService
         await _context.SaveChangesAsync();
         return new GiftItemDto
         {
-            Id = item.Id, Name = item.Name, Description = item.Description,
-            Price = item.Price, ImageUrl = item.ImageUrl, StoreUrl = item.StoreUrl,
-            Status = item.Status.ToString(), Quantity = item.Quantity,
-            QuantityPurchased = item.QuantityPurchased, DisplayOrder = item.DisplayOrder,
+            Id = item.Id,
+            Name = item.Name,
+            Description = item.Description,
+            Price = item.Price,
+            ImageUrl = item.ImageUrl,
+            StoreUrl = item.StoreUrl,
+            Status = item.Status.ToString(),
+            Quantity = item.Quantity,
+            QuantityPurchased = item.QuantityPurchased,
+            DisplayOrder = item.DisplayOrder,
             WeddingId = item.WeddingId
         };
     }
@@ -89,10 +107,16 @@ public class GiftItemService
         await _context.SaveChangesAsync();
         return new GiftItemDto
         {
-            Id = item.Id, Name = item.Name, Description = item.Description,
-            Price = item.Price, ImageUrl = item.ImageUrl, StoreUrl = item.StoreUrl,
-            Status = item.Status.ToString(), Quantity = item.Quantity,
-            QuantityPurchased = item.QuantityPurchased, DisplayOrder = item.DisplayOrder,
+            Id = item.Id,
+            Name = item.Name,
+            Description = item.Description,
+            Price = item.Price,
+            ImageUrl = item.ImageUrl,
+            StoreUrl = item.StoreUrl,
+            Status = item.Status.ToString(),
+            Quantity = item.Quantity,
+            QuantityPurchased = item.QuantityPurchased,
+            DisplayOrder = item.DisplayOrder,
             WeddingId = item.WeddingId
         };
     }
@@ -120,9 +144,13 @@ public class CashFundService
             .OrderBy(c => c.DisplayOrder)
             .Select(c => new CashFundDto
             {
-                Id = c.Id, Name = c.Name, Description = c.Description,
-                TargetAmount = c.TargetAmount, CurrentAmount = c.CurrentAmount,
-                ImageUrl = c.ImageUrl, DisplayOrder = c.DisplayOrder,
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                TargetAmount = c.TargetAmount,
+                CurrentAmount = c.CurrentAmount,
+                ImageUrl = c.ImageUrl,
+                DisplayOrder = c.DisplayOrder,
                 WeddingId = c.WeddingId
             })
             .ToListAsync();
@@ -146,9 +174,13 @@ public class CashFundService
         await _context.SaveChangesAsync();
         return new CashFundDto
         {
-            Id = fund.Id, Name = fund.Name, Description = fund.Description,
-            TargetAmount = fund.TargetAmount, CurrentAmount = fund.CurrentAmount,
-            ImageUrl = fund.ImageUrl, DisplayOrder = fund.DisplayOrder,
+            Id = fund.Id,
+            Name = fund.Name,
+            Description = fund.Description,
+            TargetAmount = fund.TargetAmount,
+            CurrentAmount = fund.CurrentAmount,
+            ImageUrl = fund.ImageUrl,
+            DisplayOrder = fund.DisplayOrder,
             WeddingId = fund.WeddingId
         };
     }
@@ -168,9 +200,13 @@ public class CashFundService
         await _context.SaveChangesAsync();
         return new CashFundDto
         {
-            Id = fund.Id, Name = fund.Name, Description = fund.Description,
-            TargetAmount = fund.TargetAmount, CurrentAmount = fund.CurrentAmount,
-            ImageUrl = fund.ImageUrl, DisplayOrder = fund.DisplayOrder,
+            Id = fund.Id,
+            Name = fund.Name,
+            Description = fund.Description,
+            TargetAmount = fund.TargetAmount,
+            CurrentAmount = fund.CurrentAmount,
+            ImageUrl = fund.ImageUrl,
+            DisplayOrder = fund.DisplayOrder,
             WeddingId = fund.WeddingId
         };
     }
@@ -198,10 +234,15 @@ public class OrderService
             .OrderByDescending(o => o.CreatedAt)
             .Select(o => new OrderDto
             {
-                Id = o.Id, GuestName = o.GuestName, GuestEmail = o.GuestEmail,
-                GuestMessage = o.GuestMessage, TotalAmount = o.TotalAmount,
-                Status = o.Status.ToString(), WeddingId = o.WeddingId,
-                CashFundId = o.CashFundId, UserId = o.UserId
+                Id = o.Id,
+                GuestName = o.GuestName,
+                GuestEmail = o.GuestEmail,
+                GuestMessage = o.GuestMessage,
+                TotalAmount = o.TotalAmount,
+                Status = o.Status.ToString(),
+                WeddingId = o.WeddingId,
+                CashFundId = o.CashFundId,
+                UserId = o.UserId
             })
             .ToListAsync();
     }
@@ -216,15 +257,22 @@ public class OrderService
 
         return new OrderDto
         {
-            Id = order.Id, GuestName = order.GuestName, GuestEmail = order.GuestEmail,
-            GuestMessage = order.GuestMessage, TotalAmount = order.TotalAmount,
-            Status = order.Status.ToString(), WeddingId = order.WeddingId,
-            CashFundId = order.CashFundId, UserId = order.UserId,
+            Id = order.Id,
+            GuestName = order.GuestName,
+            GuestEmail = order.GuestEmail,
+            GuestMessage = order.GuestMessage,
+            TotalAmount = order.TotalAmount,
+            Status = order.Status.ToString(),
+            WeddingId = order.WeddingId,
+            CashFundId = order.CashFundId,
+            UserId = order.UserId,
             Items = order.OrderItems.Select(oi => new OrderItemDto
             {
-                Id = oi.Id, GiftItemId = oi.GiftItemId,
+                Id = oi.Id,
+                GiftItemId = oi.GiftItemId,
                 GiftItemName = oi.GiftItem?.Name ?? "",
-                Quantity = oi.Quantity, UnitPrice = oi.UnitPrice,
+                Quantity = oi.Quantity,
+                UnitPrice = oi.UnitPrice,
                 TotalPrice = oi.TotalPrice
             }).ToList()
         };

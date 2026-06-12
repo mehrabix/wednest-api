@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using WedNest.Application.DTOs;
 using WedNest.Application.DTOs.Auth;
 using WedNest.Application.Interfaces;
+using WedNest.Application.Services;
 
 namespace WedNest.API.Controllers;
 
@@ -11,11 +14,13 @@ public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
     private readonly IKeycloakService _keycloakService;
+    private readonly UserService _userService;
 
-    public AuthController(IAuthService authService, IKeycloakService keycloakService)
+    public AuthController(IAuthService authService, IKeycloakService keycloakService, UserService userService)
     {
         _authService = authService;
         _keycloakService = keycloakService;
+        _userService = userService;
     }
 
     /// <summary>
@@ -87,4 +92,39 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpGet("health")]
     public IActionResult Health() => Ok(new { status = "healthy", auth = "keycloak" });
+
+    /// <summary>
+    /// Get current user profile from DB
+    /// </summary>
+    [Authorize]
+    [HttpGet("profile")]
+    [ProducesResponseType(typeof(UserDto), 200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> GetProfile()
+    {
+        var user = await _authService.GetOrCreateUserFromClaimsAsync(User);
+        if (user == null) return NotFound();
+        return Ok(user);
+    }
+
+    /// <summary>
+    /// Update current user profile
+    /// </summary>
+    [Authorize]
+    [HttpPut("profile")]
+    [ProducesResponseType(typeof(UserDto), 200)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(404)]
+    public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateRequest request)
+    {
+        var keycloakId = User.FindFirstValue("sub")
+            ?? User.FindFirstValue("email")
+            ?? User.FindFirstValue("preferred_username");
+        if (string.IsNullOrEmpty(keycloakId)) return Unauthorized();
+
+        var result = await _userService.UpdateAsync(keycloakId, request);
+        if (result == null) return NotFound();
+        return Ok(result);
+    }
 }
