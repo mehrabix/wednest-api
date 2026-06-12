@@ -65,6 +65,7 @@ builder.Services.AddScoped<WeddingService>();
 builder.Services.AddScoped<GiftItemService>();
 builder.Services.AddScoped<CashFundService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddHttpClient<ZarinPalService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
