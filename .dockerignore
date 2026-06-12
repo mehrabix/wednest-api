@@ -1,0 +1,13 @@
+**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/.env
+**/server.log
+**/server-err.log
+**/req*.json
+**/token.txt
+**/uploads
+**/.user
