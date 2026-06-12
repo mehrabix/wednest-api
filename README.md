@@ -11,7 +11,7 @@ This API handles registry management, guest interactions, and secure payments vi
 - ASP.NET Core 10 (Web API)
 - PostgreSQL 18
 - Entity Framework Core
-- JWT Authentication (Access + Refresh Tokens)
+- Keycloak Authentication (JWT Bearer)
 - Stripe Payments
 - Clean Architecture
 - Swagger / OpenAPI
@@ -52,18 +52,16 @@ Users ──────────┐
 | Column | Type | Nullable | Description |
 |--------|------|----------|-------------|
 | Id | uuid | NO | Primary key |
+| KeycloakId | varchar(128) | NO | Keycloak user identifier (unique) |
 | Email | varchar(256) | NO | Unique email address |
-| PasswordHash | varchar(512) | NO | Bcrypt password hash |
 | FirstName | varchar(100) | NO | First name |
 | LastName | varchar(100) | NO | Last name |
 | PhoneNumber | text | YES | Phone number |
-| Role | int | NO | 0=Couple, 1=Guest |
-| RefreshToken | text | YES | JWT refresh token |
-| RefreshTokenExpiry | timestamptz | YES | Refresh token expiry |
+| Role | int | NO | 0=Guest, 1=User, 2=Couple, 3=Admin |
 | CreatedAt | timestamptz | NO | Record created time |
 | UpdatedAt | timestamptz | YES | Last update time |
 
-**Indexes:** `IX_Users_Email` (unique)
+**Indexes:** `IX_Users_KeycloakId` (unique), `IX_Users_Email` (unique)
 
 ---
 
@@ -920,6 +918,20 @@ dotnet ef database update --project ../Infrastructure --startup-project .
 ```
 
 ### 5. Run the API
+
+From the project root:
+
+```bash
+dotnet run --project src/API
+```
+
+Or with a specific URL:
+
+```bash
+dotnet run --project src/API --urls http://localhost:5000
+```
+
+Or from the API directory:
 
 ```bash
 cd src/API
