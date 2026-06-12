@@ -60,6 +60,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddHttpClient<IKeycloakService, KeycloakService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
