@@ -15,9 +15,10 @@ public class FilesController : ControllerBase
     public FilesController(IFileStorage fileStorage) => _fileStorage = fileStorage;
 
     [HttpPost("upload/{folder}")]
+    [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(UploadResult), 200)]
     [ProducesResponseType(400)]
-    public async Task<IActionResult> Upload(string folder, [FromForm] IFormFile file)
+    public async Task<IActionResult> Upload(string folder, IFormFile file)
     {
         var allowedFolders = new[] { "covers", "gifts", "avatars" };
         if (!allowedFolders.Contains(folder.ToLower()))
