@@ -61,6 +61,10 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddHttpClient<IKeycloakService, KeycloakService>();
+builder.Services.AddScoped<WeddingService>();
+builder.Services.AddScoped<GiftItemService>();
+builder.Services.AddScoped<CashFundService>();
+builder.Services.AddScoped<OrderService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
