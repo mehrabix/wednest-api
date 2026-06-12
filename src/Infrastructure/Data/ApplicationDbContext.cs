@@ -17,6 +17,10 @@ public class ApplicationDbContext : DbContext
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Language> Languages => Set<Language>();
+    public DbSet<WeddingTranslation> WeddingTranslations => Set<WeddingTranslation>();
+    public DbSet<GiftItemTranslation> GiftItemTranslations => Set<GiftItemTranslation>();
+    public DbSet<CashFundTranslation> CashFundTranslations => Set<CashFundTranslation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -125,6 +129,63 @@ public class ApplicationDbContext : DbContext
                 .WithMany(o => o.Payments)
                 .HasForeignKey(e => e.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<Language>(entity =>
+        {
+            entity.HasIndex(e => e.Code).IsUnique();
+            entity.Property(e => e.Code).HasMaxLength(10);
+            entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.NativeName).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<WeddingTranslation>(entity =>
+        {
+            entity.HasIndex(e => new { e.WeddingId, e.LanguageId }).IsUnique();
+            entity.Property(e => e.Title).HasMaxLength(200);
+            entity.Property(e => e.Venue).HasMaxLength(300);
+
+            entity.HasOne(e => e.Wedding)
+                .WithMany(w => w.Translations)
+                .HasForeignKey(e => e.WeddingId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                .WithMany()
+                .HasForeignKey(e => e.LanguageId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<GiftItemTranslation>(entity =>
+        {
+            entity.HasIndex(e => new { e.GiftItemId, e.LanguageId }).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(200);
+
+            entity.HasOne(e => e.GiftItem)
+                .WithMany(g => g.Translations)
+                .HasForeignKey(e => e.GiftItemId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                .WithMany()
+                .HasForeignKey(e => e.LanguageId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<CashFundTranslation>(entity =>
+        {
+            entity.HasIndex(e => new { e.CashFundId, e.LanguageId }).IsUnique();
+            entity.Property(e => e.Name).HasMaxLength(200);
+
+            entity.HasOne(e => e.CashFund)
+                .WithMany(c => c.Translations)
+                .HasForeignKey(e => e.CashFundId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Language)
+                .WithMany()
+                .HasForeignKey(e => e.LanguageId)
+                .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }

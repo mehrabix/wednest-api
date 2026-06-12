@@ -27,4 +27,5 @@ public class Wedding : BaseEntity
 
     public ICollection<GiftItem> GiftItems { get; set; } = new List<GiftItem>();
     public ICollection<CashFund> CashFunds { get; set; } = new List<CashFund>();
+    public ICollection<WeddingTranslation> Translations { get; set; } = new List<WeddingTranslation>();
 }

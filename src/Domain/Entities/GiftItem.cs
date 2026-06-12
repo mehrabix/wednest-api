@@ -23,4 +23,5 @@ public class GiftItem : BaseEntity
     public Wedding Wedding { get; set; } = null!;
 
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public ICollection<GiftItemTranslation> Translations { get; set; } = new List<GiftItemTranslation>();
 }

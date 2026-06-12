@@ -13,4 +13,5 @@ public class CashFund : BaseEntity
     public Wedding Wedding { get; set; } = null!;
 
     public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public ICollection<CashFundTranslation> Translations { get; set; } = new List<CashFundTranslation>();
 }
