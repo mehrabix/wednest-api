@@ -70,6 +70,11 @@ builder.Services.AddScoped<LanguageService>();
 builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<PublicService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddSingleton<IFileStorage>(sp =>
+{
+    var env = sp.GetRequiredService<IWebHostEnvironment>();
+    return new FileUploadService(env.ContentRootPath);
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -95,6 +100,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 app.UseCors("AllowAll");
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

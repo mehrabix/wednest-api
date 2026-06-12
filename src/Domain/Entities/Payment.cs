@@ -10,8 +10,8 @@ public enum PaymentStatus
 
 public class Payment : BaseEntity
 {
-    public string StripePaymentIntentId { get; set; } = string.Empty;
-    public string StripeSessionId { get; set; } = string.Empty;
+    public string Authority { get; set; } = string.Empty;
+    public string? RefId { get; set; }
     public decimal Amount { get; set; }
     public string Currency { get; set; } = "usd";
     public PaymentStatus Status { get; set; } = PaymentStatus.Pending;

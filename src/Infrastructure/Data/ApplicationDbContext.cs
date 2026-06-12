@@ -132,11 +132,9 @@ public class ApplicationDbContext : DbContext
         {
             entity.Property(e => e.Amount).HasColumnType("decimal(18,2)");
             entity.Property(e => e.Currency).HasMaxLength(3);
-            entity.Property(e => e.StripePaymentIntentId).HasMaxLength(256);
-            entity.Property(e => e.StripeSessionId).HasMaxLength(256);
+            entity.Property(e => e.Authority).HasMaxLength(256);
 
-            entity.HasIndex(e => e.StripePaymentIntentId).IsUnique();
-            entity.HasIndex(e => e.StripeSessionId);
+            entity.HasIndex(e => e.Authority).IsUnique();
 
             entity.HasOne(e => e.Order)
                 .WithMany(o => o.Payments)

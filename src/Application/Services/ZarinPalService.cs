@@ -55,8 +55,7 @@ public class ZarinPalService
         var payment = new Payment
         {
             Id = Guid.NewGuid(),
-            StripePaymentIntentId = authority,
-            StripeSessionId = authority,
+            Authority = authority,
             Amount = amount,
             Currency = "IRR",
             Status = PaymentStatus.Pending,
@@ -88,7 +87,7 @@ public class ZarinPalService
         var json = await response.Content.ReadFromJsonAsync<JsonElement>();
 
         var code = json.GetProperty("code").GetInt32();
-        var payment = await _context.Payments.FirstOrDefaultAsync(p => p.StripePaymentIntentId == authority);
+        var payment = await _context.Payments.FirstOrDefaultAsync(p => p.Authority == authority);
 
         if (payment != null)
         {
@@ -99,7 +98,7 @@ public class ZarinPalService
                 var refId = json.GetProperty("data").GetProperty("ref_id").GetString()!;
                 payment.Status = PaymentStatus.Succeeded;
                 payment.PaidAt = DateTime.UtcNow;
-                payment.StripeSessionId = refId;
+                payment.RefId = refId;
 
                 var order = await _context.Orders.FindAsync(orderId);
                 if (order != null)
