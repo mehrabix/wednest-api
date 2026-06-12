@@ -40,11 +40,12 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
+            entity.HasIndex(e => e.KeycloakId).IsUnique();
             entity.HasIndex(e => e.Email).IsUnique();
+            entity.Property(e => e.KeycloakId).HasMaxLength(128);
             entity.Property(e => e.Email).HasMaxLength(256);
             entity.Property(e => e.FirstName).HasMaxLength(100);
             entity.Property(e => e.LastName).HasMaxLength(100);
-            entity.Property(e => e.PasswordHash).HasMaxLength(512);
         });
 
         modelBuilder.Entity<Wedding>(entity =>

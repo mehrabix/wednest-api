@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
-using System.Text;
 using WedNest.Application.Interfaces;
 using WedNest.Application.Services;
 using WedNest.Infrastructure.Data;
 
-Env.Load("../.env");
+var envPath = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "..", "..", ".env");
+if (!File.Exists(envPath)) envPath = Path.Combine(Directory.GetCurrentDirectory(), ".env");
+if (!File.Exists(envPath)) envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
+if (!File.Exists(envPath)) envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", ".env");
+if (File.Exists(envPath)) Env.Load(envPath);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,18 +23,18 @@ builder.Host.UseSerilog((context, configuration) =>
 var host = builder.Configuration["DB_HOST"] ?? "localhost";
 var port = builder.Configuration["DB_PORT"] ?? "5432";
 var dbName = builder.Configuration["DB_NAME"] ?? "wednest_db";
-var user = builder.Configuration["DB_USER"] ?? "postgres";
+var dbUser = builder.Configuration["DB_USER"] ?? "postgres";
 var password = builder.Configuration["DB_PASSWORD"] ?? "";
-var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
+var connectionString = $"Host={host};Port={port};Database={dbName};Username={dbUser};Password={password}";
 
 builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-var jwtSecret = builder.Configuration["JWT_SECRET"] ?? "your-super-secret-key-at-least-32-chars!!";
-var jwtIssuer = builder.Configuration["JWT_ISSUER"] ?? "WedNest";
-var jwtAudience = builder.Configuration["JWT_AUDIENCE"] ?? "WedNest";
+var keycloakUrl = builder.Configuration["KEYCLOAK_URL"] ?? "http://localhost:8080";
+var keycloakRealm = builder.Configuration["KEYCLOAK_REALM"] ?? "wednest";
+var keycloakClientId = builder.Configuration["KEYCLOAK_CLIENT_ID"] ?? "wednest-api";
 
 builder.Services.AddAuthentication(options =>
 {
@@ -40,15 +43,17 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.Authority = $"{keycloakUrl}/realms/{keycloakRealm}";
+    options.Audience = keycloakClientId;
+    options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtIssuer,
-        ValidAudience = jwtAudience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+        ValidIssuer = $"{keycloakUrl}/realms/{keycloakRealm}",
+        ValidAudience = keycloakClientId
     };
 });
 
@@ -79,7 +84,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();

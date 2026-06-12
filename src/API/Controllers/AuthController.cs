@@ -18,99 +18,7 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
-    /// Register a new user account
-    /// </summary>
-    [HttpPost("register")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(typeof(AuthResponse), 400)]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        var result = await _authService.RegisterAsync(request);
-        return result.Success ? Ok(result) : BadRequest(result);
-    }
-
-    /// <summary>
-    /// Login with email and password
-    /// </summary>
-    [HttpPost("login")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(typeof(AuthResponse), 401)]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    {
-        var result = await _authService.LoginAsync(request);
-        return result.Success ? Ok(result) : Unauthorized(result);
-    }
-
-    /// <summary>
-    /// Get new access token using refresh token
-    /// </summary>
-    [HttpPost("refresh")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(typeof(AuthResponse), 401)]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
-    {
-        var result = await _authService.RefreshTokenAsync(request);
-        return result.Success ? Ok(result) : Unauthorized(result);
-    }
-
-    /// <summary>
-    /// Request a password reset link
-    /// </summary>
-    [HttpPost("forgot-password")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
-    {
-        var result = await _authService.ForgotPasswordAsync(request);
-        return Ok(result); // Always 200 to prevent email enumeration
-    }
-
-    /// <summary>
-    /// Reset password using token from email
-    /// </summary>
-    [HttpPost("reset-password")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(typeof(AuthResponse), 400)]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-    {
-        var result = await _authService.ResetPasswordAsync(request);
-        return result.Success ? Ok(result) : BadRequest(result);
-    }
-
-    /// <summary>
-    /// Change password (requires authentication)
-    /// </summary>
-    [Authorize]
-    [HttpPost("change-password")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(typeof(AuthResponse), 400)]
-    [ProducesResponseType(401)]
-    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
-    {
-        var userId = GetUserId();
-        if (userId == null) return Unauthorized();
-
-        var result = await _authService.ChangePasswordAsync(userId.Value, request);
-        return result.Success ? Ok(result) : BadRequest(result);
-    }
-
-    /// <summary>
-    /// Revoke refresh token (logout)
-    /// </summary>
-    [Authorize]
-    [HttpPost("revoke")]
-    [ProducesResponseType(typeof(AuthResponse), 200)]
-    [ProducesResponseType(401)]
-    public async Task<IActionResult> RevokeRefreshToken()
-    {
-        var userId = GetUserId();
-        if (userId == null) return Unauthorized();
-
-        var result = await _authService.RevokeRefreshTokenAsync(userId.Value);
-        return Ok(result);
-    }
-
-    /// <summary>
-    /// Get current user profile
+    /// Get current user profile from Keycloak token (auto-creates in DB if new)
     /// </summary>
     [Authorize]
     [HttpGet("me")]
@@ -118,16 +26,14 @@ public class AuthController : ControllerBase
     [ProducesResponseType(401)]
     public async Task<IActionResult> GetCurrentUser()
     {
-        var userId = GetUserId();
-        if (userId == null) return Unauthorized();
-
-        var user = await _authService.GetUserByIdAsync(userId.Value);
-        return user != null ? Ok(user) : NotFound();
+        var user = await _authService.GetOrCreateUserFromClaimsAsync(User);
+        return user != null ? Ok(user) : Unauthorized();
     }
 
-    private Guid? GetUserId()
-    {
-        var claim = User.FindFirst(ClaimTypes.NameIdentifier);
-        return claim != null ? Guid.Parse(claim.Value) : null;
-    }
+    /// <summary>
+    /// Health check - no auth required
+    /// </summary>
+    [AllowAnonymous]
+    [HttpGet("health")]
+    public IActionResult Health() => Ok(new { status = "healthy", auth = "keycloak" });
 }
