@@ -21,6 +21,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<WeddingTranslation> WeddingTranslations => Set<WeddingTranslation>();
     public DbSet<GiftItemTranslation> GiftItemTranslations => Set<GiftItemTranslation>();
     public DbSet<CashFundTranslation> CashFundTranslations => Set<CashFundTranslation>();
+    public DbSet<GuestRsvp> GuestRsvps => Set<GuestRsvp>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -197,6 +198,21 @@ public class ApplicationDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.LanguageId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<GuestRsvp>(entity =>
+        {
+            entity.Property(e => e.GuestName).HasMaxLength(200);
+            entity.Property(e => e.GuestEmail).HasMaxLength(256);
+            entity.Property(e => e.DietaryRestrictions).HasMaxLength(500);
+            entity.Property(e => e.Message).HasMaxLength(1000);
+
+            entity.HasIndex(e => new { e.WeddingId, e.GuestEmail }).IsUnique().HasFilter("\"GuestEmail\" IS NOT NULL");
+
+            entity.HasOne(e => e.Wedding)
+                .WithMany(w => w.GuestRsvps)
+                .HasForeignKey(e => e.WeddingId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         SeedData(modelBuilder);

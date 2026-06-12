@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,10 +71,30 @@ builder.Services.AddScoped<LanguageService>();
 builder.Services.AddScoped<TranslationService>();
 builder.Services.AddScoped<PublicService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<RsvpService>();
 builder.Services.AddSingleton<IFileStorage>(sp =>
 {
     var env = sp.GetRequiredService<IWebHostEnvironment>();
     return new FileUploadService(env.ContentRootPath);
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddFixedWindowLimiter("public", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 60;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueLimit = 0;
+    });
+
+    options.AddFixedWindowLimiter("rsvp", limiterOptions =>
+    {
+        limiterOptions.PermitLimit = 5;
+        limiterOptions.Window = TimeSpan.FromMinutes(1);
+        limiterOptions.QueueLimit = 0;
+    });
 });
 
 builder.Services.AddControllers();
@@ -101,6 +122,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseCors("AllowAll");
 app.UseStaticFiles();
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

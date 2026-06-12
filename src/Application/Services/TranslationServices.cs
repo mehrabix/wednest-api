@@ -356,6 +356,14 @@ public class PublicService
             CashFunds = cashFunds
         };
     }
+
+    public async Task<Guid?> GetWeddingIdBySlugAsync(string slug)
+    {
+        return await _context.Weddings
+            .Where(w => w.Slug == slug && w.IsPublic)
+            .Select(w => (Guid?)w.Id)
+            .FirstOrDefaultAsync();
+    }
 }
 
 public class UserService

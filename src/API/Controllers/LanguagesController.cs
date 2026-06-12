@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WedNest.Application.DTOs;
@@ -14,12 +15,14 @@ public class LanguagesController : ControllerBase
     public LanguagesController(LanguageService service) => _service = service;
 
     [HttpGet]
+    [EnableRateLimiting("public")]
     public async Task<ActionResult<List<LanguageDto>>> GetAll()
     {
         return await _service.GetAllAsync();
     }
 
     [HttpGet("{code}")]
+    [EnableRateLimiting("public")]
     public async Task<ActionResult<LanguageDto>> GetByCode(string code)
     {
         var result = await _service.GetByCodeAsync(code);
