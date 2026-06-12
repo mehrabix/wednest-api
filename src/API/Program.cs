@@ -66,6 +66,10 @@ builder.Services.AddScoped<GiftItemService>();
 builder.Services.AddScoped<CashFundService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddHttpClient<ZarinPalService>();
+builder.Services.AddScoped<LanguageService>();
+builder.Services.AddScoped<TranslationService>();
+builder.Services.AddScoped<PublicService>();
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
