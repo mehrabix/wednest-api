@@ -200,5 +200,25 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(e => e.LanguageId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        SeedData(modelBuilder);
+    }
+
+    private static void SeedData(ModelBuilder modelBuilder)
+    {
+        var now = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var langEnId = Guid.Parse("10000000-0000-0000-0000-000000000001");
+        var langArId = Guid.Parse("10000000-0000-0000-0000-000000000002");
+        var langFaId = Guid.Parse("10000000-0000-0000-0000-000000000003");
+
+        modelBuilder.Entity<Language>().HasData(
+            new Language { Id = langEnId, Code = "en", Name = "English", NativeName = "English", IsActive = true, IsDefault = true, DisplayOrder = 1, CreatedAt = now },
+            new Language { Id = langArId, Code = "ar", Name = "Arabic", NativeName = "\u0627\u0644\u0639\u0631\u0628\u064a\u0629", IsActive = true, IsDefault = false, DisplayOrder = 2, CreatedAt = now },
+            new Language { Id = langFaId, Code = "fa", Name = "Persian", NativeName = "\u0641\u0627\u0631\u0633\u06cc", IsActive = true, IsDefault = false, DisplayOrder = 3, CreatedAt = now }
+        );
+
+        // Users are managed by Keycloak — skip seeding them to avoid FK conflicts.
+        // Wedding/gifts/cash funds depend on user IDs, so seed those via API after login.
     }
 }
