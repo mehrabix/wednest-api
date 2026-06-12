@@ -2,7 +2,7 @@
 
 A backend service for a Wedding Registry platform built with **ASP.NET Core (.NET 10)** and **PostgreSQL**.
 
-This API handles registry management, guest interactions, and secure payments via **Stripe Checkout + Webhooks**.
+This API handles registry management, guest interactions, and secure payments via **ZarinPal (Iranian Payment Gateway)**.
 
 ---
 
@@ -12,7 +12,7 @@ This API handles registry management, guest interactions, and secure payments vi
 - PostgreSQL 18
 - Entity Framework Core
 - Keycloak Authentication (JWT Bearer)
-- Stripe Payments
+- ZarinPal Payments (Iranian Payment Gateway)
 - Clean Architecture
 - Swagger / OpenAPI
 - Serilog Logging
@@ -162,10 +162,10 @@ Users ──────────┐
 | Column | Type | Nullable | Description |
 |--------|------|----------|-------------|
 | Id | uuid | NO | Primary key |
-| StripePaymentIntentId | varchar(256) | NO | Stripe PaymentIntent ID (unique) |
-| StripeSessionId | varchar(256) | NO | Stripe Checkout Session ID |
-| Amount | decimal(18,2) | NO | Payment amount |
-| Currency | varchar(3) | NO | ISO currency code (default: usd) |
+| Authority | varchar(256) | NO | ZarinPal Authority ID (unique) |
+| RefId | varchar(256) | YES | ZarinPal Ref ID after verification |
+| Amount | decimal(18,2) | NO | Payment amount (IRR) |
+| Currency | varchar(3) | NO | ISO currency code (default: IRR) |
 | Status | int | NO | 0=Pending, 1=Succeeded, 2=Failed, 3=Refunded |
 | PaidAt | timestamptz | YES | When payment was completed |
 | FailureReason | text | YES | Error message if failed |
@@ -898,10 +898,10 @@ JWT_AUDIENCE=WedNest
 JWT_ACCESS_EXPIRY_MINUTES=15
 JWT_REFRESH_EXPIRY_DAYS=7
 
-# Stripe
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+# ZarinPal
+ZARINPAL_MERCHANT_ID=your-merchant-id
+ZARINPAL_SANDBOX=true
+ZARINPAL_CALLBACK_URL=http://localhost:5000/api/payments/callback
 
 # App
 ASPNETCORE_ENVIRONMENT=Development
@@ -966,7 +966,7 @@ wednest-api/
         WeddingTranslation.cs   # Localized wedding content
         GiftItemTranslation.cs  # Localized gift content
         CashFundTranslation.cs  # Localized fund content
-    Infrastructure/             # EF Core, Stripe, JWT
+    Infrastructure/             # EF Core, ZarinPal, JWT
       Data/
         ApplicationDbContext.cs
         DesignTimeDbContextFactory.cs
